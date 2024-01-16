@@ -3,7 +3,7 @@ raccoonclock
 
 this is a reference implementation for [a calendar specification](https://www.raccoon.fun/calendar.html) that i wrote for fun. it might be a little messy and unstable inside, i wrote it hastily and it's my first time using skyfield :)
 
-you need the python packages `skyfield`, `blessed`, and `xdg-base-dirs`.
+you need some python packages first: `pip install -r requirements.txt`
 
 on first run, `raccoonclock.toml` will be generated. edit it to set your desired coordinates.
 

@@ -1,0 +1,5 @@
+skyfield>=1.35 # needs to have `.toposlib.wgs84`
+python-dateutil>=2.7 # earliest tested
+blessed>=1.18 # post- python issue #10570
+xdg-base-dirs>=6.0 # first release by this packagename
+toml>=0.10 # needs to support `.load(f: pathlib.Path)`
