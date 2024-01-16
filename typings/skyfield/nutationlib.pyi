@@ -1,0 +1,3 @@
+from .timelib import Time
+
+def iau2000b_radians(t: Time) -> tuple[float, float]: ...

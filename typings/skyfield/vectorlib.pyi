@@ -1,0 +1,9 @@
+from .positionlib import Barycentric, Geocentric, ICRF
+from .timelib import Time
+
+class VectorSum(VectorFunction): ...
+
+class VectorFunction:
+    def __add__(self, other: VectorFunction) -> VectorSum: ...
+    def at(self, t: Time) -> Barycentric | Geocentric | ICRF: ...
+    

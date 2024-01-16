@@ -1,0 +1,6 @@
+from typing import Any
+from .timelib import Timescale
+
+class Loader:
+    def __call__(self, filename: str, reload: bool = ..., backup: bool = ..., builtin: bool = ...) -> Any: ...
+    def timescale(self, delta_t: float = ..., builtin: bool = ...) -> Timescale: ...
