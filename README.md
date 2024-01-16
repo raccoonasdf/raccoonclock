@@ -21,3 +21,12 @@ the second and third line are the amount of time until nautical and astronomical
 the fourth line includes
 - the ALTITUDE of the sun in the sky
 - the DAY PHASE (nighttime, astronomical twilight, nautical twilight, civil twilight, daytime)
+
+
+example output:
+```
+[ ☉ 00:05:13 ☽ -08:59:45 ] 1☉ ○○/□🜄🜃/○🜂🜁/♅
+ n. twilight ☉ -09:31:43
+ a. twilight ☉ -10:07:10
+000° 00' (daytime)
+```
