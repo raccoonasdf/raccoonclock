@@ -21,11 +21,23 @@ HALF = {
     1: '☽'
 }
 
+ASCII_HALF = {
+    0: 'r.',
+    1: 's.'
+}
+
 QUARTER = {
-    0: ' ○□/□🜄🜁/○🜂🜃/♇',
-    1: ' □□/□🜂🜁/○🜄🜃/♆',
-    2: ' □○/□🜂🜃/○🜄🜁/⊕',
-    3: ' ○○/□🜄🜃/○🜂🜁/♅',
+    0: '○□/□🜄🜁/○🜂🜃/♇',
+    1: '□□/□🜂🜁/○🜄🜃/♆',
+    2: '□○/□🜂🜃/○🜄🜁/⊕',
+    3: '○○/□🜄🜃/○🜂🜁/♅',
+}
+
+ASCII_QUARTER = {
+    0: 'SN./N.mn./S.mf./pn.',
+    1: 'N./N.n./S.f./ne.',
+    2: 'NS./N.mf./S.mn./ta.',
+    3: 'S./N.f./S.n./os.'
 }
 
 
@@ -40,7 +52,6 @@ class RelativeTime:
         self.now = now
         new_polarity = self.then - self.now < 0
         return old_polarity != new_polarity
-
 
     def __str__(self):
         then = self.then.utc_datetime()
@@ -72,8 +83,15 @@ class Date:
         self.eighth = eighth
         self.day = day
 
+    def show(self, ascii: bool = False) -> str:
+        half = ASCII_HALF if ascii else HALF
+        quarter = ASCII_QUARTER if ascii else QUARTER
+        spacer = ' ' if ascii else '  '
+
+        return f'{self.day}{half[self.eighth%2]}{spacer}{quarter[self.eighth//2]}'
+
     def __str__(self):
-        return f'{self.day}{HALF[self.eighth%2]}{QUARTER[self.eighth//2]}'
+        return self.show()
 
 
 class Altitude:
@@ -89,9 +107,18 @@ class Altitude:
         self.minutes = int(minutes)
 
         self.seconds = int(seconds*60)
+    
+    def show(self, minutes: bool = True, seconds: bool = True) -> str:
+        res = f'{self.degrees:03}°'
+        if minutes:
+            res += f" {self.minutes:02}'"
+        if seconds:
+            res += f' {self.seconds:02}"'
+
+        return res
 
     def __str__(self):
-        return f'{self.degrees:03}° {self.minutes:02}\' {self.seconds:02}"'
+        return self.show()
 
 
 class Clock:

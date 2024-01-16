@@ -16,7 +16,7 @@ the first line of output includes
 - the HALF
 - the QUART in its absolute format, its relative format from both hemispheres, and its oldstyle format
 
-the second and third line are the amount of time until nautical and astronomical twilight, respectively
+the second and third line are the amount of time until nautical and astronomical twilight, respectively. the second line also reduplicates the DAY, HALF, and QUART in ASCII mode.
 
 the fourth line includes
 - the ALTITUDE of the sun in the sky

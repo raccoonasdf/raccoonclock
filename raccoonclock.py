@@ -129,12 +129,15 @@ class ClockDisplay:
 
             self.altitude = clock.altitude(time)
 
-        print( '                                             ')
-        print( '                                             ')
-        print(f'  [ {self.since} {self.until} ] {self.date}')
-        print(f'   n. twilight {self.until_nautical_twilight}')
-        print(f'   a. twilight {self.until_astronomical_twilight}')
-        print(f'  {self.altitude.degrees:03}° {self.altitude.minutes:02}\' ({self.day_phase})')
+        def clear_and_print(value=''):
+            print(f'{term.clear_eol()}{value}')
+
+        clear_and_print()
+        clear_and_print()
+        clear_and_print(f'  [ {self.since} {self.until} ] {self.date}')
+        clear_and_print(f'   n. twilight {self.until_nautical_twilight}   {self.date.show(ascii=True)}')
+        clear_and_print(f'   a. twilight {self.until_astronomical_twilight}')
+        clear_and_print(f'  {self.altitude.show(seconds=False)} ({self.day_phase})')
 
 
 clock_display = ClockDisplay()
