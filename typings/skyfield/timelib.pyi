@@ -1,6 +1,6 @@
 from collections.abc import Iterable
 from datetime import date, datetime, timedelta
-from numpy import float64
+from numpy import float64, ndarray
 
 class Timescale:
     def now(self) -> Time: ...
@@ -8,5 +8,5 @@ class Timescale:
 
 class Time:
     def __sub__(self, other: Time | timedelta | int | float) -> float64: ...
-    def utc_datetime(self) -> datetime: ...
+    def utc_datetime(self) -> ndarray | datetime: ...
     _nutation_angles_radians: tuple[float, float]
