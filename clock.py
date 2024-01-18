@@ -144,7 +144,10 @@ class Clock:
             lesser, greater, self.observer.day_phase_func(phase))
         half_time, half = half_times[idx], halves[idx]
 
-        return RelativeTime(half, half_time, now)
+        # should always be scalar, but make sure for my friend mypy <3
+        half = half.take(0)
+
+        return RelativeTime(bool(half), half_time, now)
 
     def since(self, time: Optional[Time] = None, phase: int = 4) -> RelativeTime:
         return self._since_until(True, time, phase)
@@ -173,9 +176,10 @@ class Clock:
 
         then = find_discrete(then, now, segment_at)[0][-1]
 
-        day = sum(find_discrete(then, now, daytime_at)[1])
+        # mypy is mistaken: sum works with bool_
+        day: np.int_ = sum(find_discrete(then, now, daytime_at)[1]) # type: ignore[assignment, arg-type]
 
-        return Date(int(eighth), day)
+        return Date(int(eighth), int(day))
 
     def altitude(self, time: Optional[Time] = None) -> Altitude:
         return Altitude(self.observer.observe(Planet.SUN, time).altaz()[0])
