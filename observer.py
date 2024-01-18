@@ -1,7 +1,7 @@
 from collections.abc import Callable
 from enum import Enum
-from typing import Generic, Optional, TypeVar
-from numpy import zeros_like, ndarray, int64
+from typing import Any, Generic, Optional, TypeVar
+import numpy as np
 from skyfield.constants import tau
 from skyfield.framelib import ecliptic_frame
 from skyfield.nutationlib import iau2000b_radians
@@ -56,10 +56,10 @@ class Observer:
 
         return self.pos(time).observe(self.planets[planet.name]).apparent()
 
-    def segment_func(self, segments: int) -> SearchlibCallable:
+    def segment_func(self, segments: int) -> SearchlibCallable[np.ndarray[Any, np.dtype[np.int64]] | np.int64]:
         sun = self.planets[Planet.SUN.name]
 
-        def segment_at(time: Optional[Time] = None) -> ndarray | int64:
+        def segment_at(time: Optional[Time] = None) -> np.ndarray[Any, np.dtype[np.int64]] | np.int64:
             time = self.or_now(time)
             time._nutation_angles_radians = iau2000b_radians(time)
 
@@ -69,10 +69,10 @@ class Observer:
 
         return SearchlibCallable(segment_at, step_days=365/segments)
 
-    def which_day_phase_func(self) -> SearchlibCallable:
+    def which_day_phase_func(self) -> SearchlibCallable[np.ndarray[Any, np.dtype[np.float64]]]:
         sun = self.planets[Planet.SUN.name]
 
-        def which_day_phase_at(time: Optional[Time] = None) -> ndarray:
+        def which_day_phase_at(time: Optional[Time] = None) -> np.ndarray[Any, np.dtype[np.float64]]:
             time = self.or_now(time)
             time._nutation_angles_radians = iau2000b_radians(time)
 
@@ -80,7 +80,7 @@ class Observer:
             alt, _, _ = self.pos(time).observe(sun).apparent().altaz()
             alt_deg = alt.degrees
 
-            r = zeros_like(alt_deg, int)
+            r = np.zeros_like(alt_deg, int)
             r[alt_deg >= -18.0] = 1
             r[alt_deg >= -12.0] = 2
             r[alt_deg >= -6.0] = 3
@@ -90,8 +90,8 @@ class Observer:
 
         return SearchlibCallable(which_day_phase_at, step_days=0.02)
 
-    def day_phase_func(self, phase: int) -> SearchlibCallable:
+    def day_phase_func(self, phase: int) -> SearchlibCallable[bool]:
         def day_phase_at(time: Optional[Time] = None) -> bool:
-            return self.which_day_phase_func()(time) == phase
+            return bool(self.which_day_phase_func()(time) == phase)
 
         return SearchlibCallable(day_phase_at, step_days=0.02)

@@ -1,9 +1,10 @@
-from numpy import ndarray, float64
+from typing import Any
+import numpy as np
 
 class Unit: ...
 
 class Angle(Unit):
-    degrees: ndarray | float64
-    radians: ndarray | float64
+    degrees: np.ndarray[Any, np.dtype[np.float64]] | np.float64
+    radians: np.ndarray[Any, np.dtype[np.float64]] | np.float64
 
 class Distance(Unit): ...

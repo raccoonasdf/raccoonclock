@@ -4,6 +4,7 @@ from typing import Optional
 from skyfield.searchlib import find_discrete
 from skyfield.timelib import Time
 from skyfield.units import Angle
+import numpy as np
 
 from observer import Observer, Planet
 
@@ -51,9 +52,9 @@ class RelativeTime:
         old_polarity = self.then - self.now < 0
         self.now = now
         new_polarity = self.then - self.now < 0
-        return old_polarity != new_polarity
+        return bool(old_polarity != new_polarity)
 
-    def __str__(self):
+    def __str__(self) -> str:
         then = self.then.utc_datetime()
         now = self.now.utc_datetime()
         if now > then:
@@ -74,7 +75,7 @@ class DayPhase:
     def __init__(self, phase: int):
         self.phase = phase
 
-    def __str__(self):
+    def __str__(self) -> str:
         return DAY_PHASE[self.phase]
 
 
@@ -90,7 +91,7 @@ class Date:
 
         return f'{self.day}{half[self.eighth%2]}{spacer}{quarter[self.eighth//2]}'
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.show()
 
 
@@ -117,7 +118,7 @@ class Altitude:
 
         return res
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.show()
 
 
@@ -174,7 +175,7 @@ class Clock:
 
         day = sum(find_discrete(then, now, daytime_at)[1])
 
-        return Date(eighth, day)
+        return Date(int(eighth), day)
 
     def altitude(self, time: Optional[Time] = None) -> Altitude:
         return Altitude(self.observer.observe(Planet.SUN, time).altaz()[0])

@@ -2,18 +2,19 @@
 
 from argparse import ArgumentParser
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional, Protocol
 from dateutil.parser import isoparse
 import sys
 import time
 from blessed import Terminal
+import numpy as np
 from skyfield.iokit import Loader
 from skyfield.jpllib import SpiceKernel
 from skyfield.timelib import Time
 import toml
 from xdg_base_dirs import xdg_config_home, xdg_cache_home
 
-from clock import Clock
+from clock import Clock, Date, DayPhase
 from observer import Observer
 
 def existing_path(path: Path) -> Path:
@@ -83,24 +84,26 @@ clock = Clock(observer)
 
 
 class ClockDisplay:
-    def __init__(self):
-        self.last_update = None
+    def __init__(self) -> None:
+        self.last_update: Optional[Time] = None
 
         # avoid computing initial values until needed
-        class FakeRelativeTime:
-            def update(_) -> bool:
+        class Updateable(Protocol):
+            def update(self, now: Time) -> bool: ...
+        class FakeUpdateable:
+            def update(self, _: Time) -> bool:
                 return True
 
-        self.since = FakeRelativeTime
-        self.until = FakeRelativeTime
-        self.date = FakeRelativeTime
+        self.since: Updateable = FakeUpdateable()
+        self.until: Updateable = FakeUpdateable()
+        self.date: Optional[Date] = None
 
-        self.until_nautical_twilight = FakeRelativeTime
-        self.until_astronomical_twilight = FakeRelativeTime
+        self.until_nautical_twilight: Updateable = FakeUpdateable()
+        self.until_astronomical_twilight: Updateable = FakeUpdateable()
 
-        self.day_phase = None
+        self.day_phase: Optional[DayPhase] = None
 
-    def show(self, time: Optional[Time] = None):
+    def show(self, time: Optional[Time] = None) -> None:
         time = clock.observer.or_now(time)
 
         if self.last_update is None or time - self.last_update >= 0.000005:
@@ -126,11 +129,14 @@ class ClockDisplay:
                 self.date = clock.date(time)
                 self.day_phase = clock.day_phase(time)
 
-
             self.altitude = clock.altitude(time)
 
-        def clear_and_print(value=''):
+
+        def clear_and_print(value: str ='') -> None:
             print(f'{term.clear_eol()}{value}')
+
+        # appease mypy
+        if self.date is None: return
 
         clear_and_print()
         clear_and_print()

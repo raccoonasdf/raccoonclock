@@ -1,11 +1,11 @@
 from typing import Optional
-from .framelib import EclipticFrame
+from .framelib import __ecliptic_frame
 from .units import Angle, Distance
 from .vectorlib import VectorFunction
 
 class ICRF:
     def altaz(self, temperature_C: Optional[float | str] = ..., pressure_mbar: float | str = ...) -> tuple[Angle, Angle, Distance]: ...
-    def frame_latlon(self, frame: EclipticFrame) -> tuple[Angle, Angle, Distance]: ...
+    def frame_latlon(self, frame: __ecliptic_frame) -> tuple[Angle, Angle, Distance]: ...
 
 class Apparent(ICRF): ...
 
